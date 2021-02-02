@@ -113,9 +113,9 @@ def getBroadcomOIDs(config):
         streamDestAddr = streamsDestIPAddr[s].value
         # Determine whether this is a tx or rx stream by testing streamDestAddr. If empty or 0.0.0.0, this is a tx stream
         if str(streamDestAddr) == "" or str(streamDestAddr) == "0.0.0.0":
-            direction = "tx"
-        else:
             direction = "rx"
+        else:
+            direction = "tx"
         streamsDetails.append({"enabled": enabledStatus,
                             "streamName": streamName,
                             "streamDestAddr": streamDestAddr,
