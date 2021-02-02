@@ -86,22 +86,36 @@ def getBroadcomOIDs(config):
 
     # Do bulk get to get a list of the OIDs corresponding to the streams
     # and also their 'enabled/disabled' status
-    enabledStreamsOIDList = parsedSNMPBulkGet(snmp_session, oid_streamsStreamEnabled)
+    streamsStatuses = parsedSNMPBulkGet(snmp_session, oid_streamsStreamEnabled)
+    streamsCount = len(streamsStatuses)
     # enabledStreamsOIDList is a list of SNMPVariable objects containing the parameters
     # SNMPVariable.value the enabled/disabled status (1 or 0) (represented as a string)
     # SNMPVariable.oid, the oid for that particular stream
     # SNMPVariable.snmp_type, The data type contained within SNMPVariable.value (eg INTEGER)
-    pprint.pprint(enabledStreamsOIDList)
+    pprint.pprint(streamsStatuses)
 
     ########### Get stream names from Broadcom #################
     # Do bulk_get to grab all stream names with a single swipe
-    streamNames = parsedSNMPBulkGet(snmp_session, oid_streamsStreamName)
-    pprint.pprint(streamNames)
+    streamsNames = parsedSNMPBulkGet(snmp_session, oid_streamsStreamName)
+    pprint.pprint(streamsNames)
 
-    ##### Get Stream destination ip addresses (of all streams, tx or rx (impossible), enabled or not) #################
-    streamDestIPAddr = parsedSNMPBulkGet(snmp_session, oid_streamsDestinationIPAddress)
-    pprint.pprint(streamDestIPAddr)
+    ##### Get Stream destination ip addresses
+    # Note, a destination addr of '0.0.0.0' implies that this is a receive stream
+    streamsDestIPAddr = parsedSNMPBulkGet(snmp_session, oid_streamsDestinationIPAddress)
+    pprint.pprint(streamsDestIPAddr)
 
+    # Create a list of dicts of the available streams containing {enabled, Name, Type (tx/rx)}
+    streamsDetails = []
+    for s in range(streamsCount):
+        # Get enabled/disabled status
+        enabledStatus = streamsStatus[s].value
+        streamName = streamsNames[s].value
+        streamDestAddr = streamsDestIPAddr[s].value
+        streamsList.append({"enabled": enabledStatus,
+                            "streamName": streamName,
+                            "streamDestAddr": streamDestAddr
+        })
+        pprint.pprint(streamsDetails)
     # # Declare array to hold the status of a stream (either enabled (1) or disabled (0))
     # enabledStreamIDList = []
     # try:
