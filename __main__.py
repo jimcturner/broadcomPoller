@@ -51,8 +51,10 @@ def parsedSNMPBulkGet(snmp_session, oid):
         raise Exception(f"parsedSNMPBulkGet(), {e}")
 
 
-# Polls the supplied device and returns a dictionary of OIDS
-def getBroadcomOIDs(config):
+# Polls the supplied device and returns two lists of streams txStreams, rxStreams
+# (as a list of dictionaries)
+# Each list item is a dict containing the stream details
+def getBroadcomStreams(config):
     # OID templates as specified by the Broadcom specification
     sample_OID_LABELS = {
         'unitName': '.1.3.6.1.4.1.22425.10.4.5.0',
@@ -92,26 +94,27 @@ def getBroadcomOIDs(config):
     # SNMPVariable.value the enabled/disabled status (1 or 0) (represented as a string)
     # SNMPVariable.oid, the oid for that particular stream
     # SNMPVariable.snmp_type, The data type contained within SNMPVariable.value (eg INTEGER)
-    pprint.pprint(streamsStatuses)
+    # pprint.pprint(streamsStatuses)
 
     ########### Get stream names from Broadcom #################
     # Do bulk_get to grab all stream names with a single swipe
     streamsNames = parsedSNMPBulkGet(snmp_session, oid_streamsStreamName)
-    pprint.pprint(streamsNames)
+    # pprint.pprint(streamsNames)
 
     ##### Get Stream destination ip addresses
     # Note, a destination addr of '0.0.0.0' implies that this is a receive stream
     streamsDestIPAddr = parsedSNMPBulkGet(snmp_session, oid_streamsDestinationIPAddress)
-    pprint.pprint(streamsDestIPAddr)
+    # pprint.pprint(streamsDestIPAddr)
 
-    # Create a list of dicts of the available streams containing {enabled, Name, Type (tx/rx)}
+    # Create a list of dicts of the available streams containing {enabled, Name, dest addr direction (tx/rx)}
     streamsDetails = []
     for s in range(streamsCount):
-        # Get enabled/disabled status
+        # Get enabled/disabled status (convert to an int: 1:enabled, 0:disabled)
         enabledStatus = int(streamsStatuses[s].value)
         streamName = streamsNames[s].value
         streamDestAddr = streamsDestIPAddr[s].value
-        # Determine whether this is a tx or rx stream by testing streamDestAddr. If empty or 0.0.0.0, this is a tx stream
+        # Determine whether this is a tx or rx stream by testing streamDestAddr. If empty or 0.0.0.0,
+        # (depending upon firmware revision) this is an rx stream
         if str(streamDestAddr) == "" or str(streamDestAddr) == "0.0.0.0":
             direction = "rx"
         else:
@@ -124,16 +127,40 @@ def getBroadcomOIDs(config):
 
     # Create sublist of receive streams
     rxStreams = list(filter(lambda d: d["direction"] == "rx", streamsDetails))
-    pprint.pprint(rxStreams, compact=True)
-    return rxStreams
+
+    # Create sublist of transmit streams
+    txStreams = list(filter(lambda d: d["direction"] == "tx", streamsDetails))
+    # pprint.pprint(rxStreams, compact=True)
+    return txStreams, rxStreams
+
+# Takes a streamsList and an oid prefix, and and the name of the parameter that the oid will query
+# It then returns a dict of names and complete oids that can be used to perform an snmp_get on a particular stream
+# The name is a composite of the stream name and the variable name that the snmp_get will retrieve
+# eg. RxStream1_DroppedPacketCount
+# The supplied prefix is appended with '.n' where 'n' is the index no of the stream with that name
+def generateOIDs(streamsList, oidVariableName,oidPrefix):
+    oidsDict = {}
+    for n in range(len(streamsList)):
+        # Generate the label for the oid
+        snmpVariableName = f"{streamsList[n]['streamName']}_{oidVariableName}" # [streamName]_[oidVariableName]
+        # Generate the actual oid to get that particular parameter for that particular stream
+        oid = f"{oidPrefix}.{n}" # [oidPrefix].[streamIndexNo]
+        # Add the new entry to the dict
+        oidsDict[snmpVariableName] = oid
+    return oidsDict
+
+
 
 def main(argv):
     if len(argv) == 2:
         try:
             # Create Config object for the supplied device
             targetDevice = Config(argv[0], argv[1]) # Pass in ip address and community string
-            broadcomOIDs = getBroadcomOIDs(targetDevice)
-
+            # Get a list of active tx and rx streams
+            txStreams, rxStreams = getBroadcomOIDs(targetDevice)
+            # Generate a dict of 'Dropped packet count' oids for the streams
+            oids = generateOIDs(rxStreams, "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22.0")
+            pprint.pprint(oids)
         except Exception as e:
             print(f"Fatal error {e}")
             exit()
