@@ -9,7 +9,7 @@ import sys
 
 # An object to hold the device connection parameters
 class Config(object):
-    def __init__(self, hostName, community, version, retries=0, timeout=5):
+    def __init__(self, hostName, community, version=2, retries=0, timeout=5):
         self.hostName = hostName
         self.community = community
         self.version = version
@@ -86,7 +86,18 @@ def getBroadcomOIDs(config):
     return enabledStreamsOIDList
 
 def main(argv):
-    print(f"enabledStreamsOIDList: {enabledStreamsOIDList}")
+    if len(argv) == 2:
+        try:
+            # Create Config object for the supplied device
+            targetDevice = Config(argv[0], argv[1]) # Pass in ip address and community string
+            broadcomOIDs = getBroadcomOIDs(targetDevice)
+            print(f"{broadcomOIDs}")
+        except Exception as e:
+            print(f"Fatal error {e}")
+
+    else:
+        print("usage: python __main.__.py [ip address of host] [snmp community string]")
+
 
 # Invoke main() method (entry point for Python script)
 if __name__ == "__main__":
