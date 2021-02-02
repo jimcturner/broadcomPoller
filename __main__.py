@@ -121,7 +121,7 @@ def getBroadcomOIDs(config):
                             "streamDestAddr": streamDestAddr,
                             "direction": direction
         })
-    pprint.pprint(streamsDetails,indent=1)
+    pprint.pprint(streamsDetails, compact=True)
 
 
     return streamsDetails
