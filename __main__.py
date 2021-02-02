@@ -122,9 +122,10 @@ def getBroadcomOIDs(config):
                             "direction": direction
         })
     pprint.pprint(streamsDetails, compact=True)
+    # Create sublist of receive streams
+    rxStreams = list(filter(lambda d: d["direction"] == "rx", streamsDetails))
 
-
-    return streamsDetails
+    return rxStreams
 
 def main(argv):
     if len(argv) == 2:
