@@ -69,9 +69,9 @@ def getBroadcomOIDs(config):
 
     # These are the templates for the dynamically generated OIDs
     # They are missing a final .x value that corresponds to an audio stream
-    enabledStreamOID = '.1.3.6.1.4.1.22425.10.5.3.5.1.2'
-    streamsStreamNameOID = '.1.3.6.1.4.1.22425.10.5.3.5.1.3'
-    streamsDestinationIPAddressOID = '.1.3.6.1.4.1.22425.10.5.3.5.1.12'
+    oid_streamsStreamEnabled = '.1.3.6.1.4.1.22425.10.5.3.5.1.2'
+    oid_streamsStreamName = '.1.3.6.1.4.1.22425.10.5.3.5.1.3'
+    oid_streamsDestinationIPAddress = '.1.3.6.1.4.1.22425.10.5.3.5.1.12'
 
     # Create an SNMP session to be used for our requests to the broadcom
     snmp_session = Session(
@@ -84,8 +84,27 @@ def getBroadcomOIDs(config):
 
     ############# Get list of all streams (those that are enabled and disabled)
 
-    # Do bulk get to get a list of the OIDs corresponding to the *enabled* streams
-    enabledStreamsOIDList = parsedSNMPBulkGet(snmp_session, enabledStreamOID)
+    # Do bulk get to get a list of the OIDs corresponding to the streams
+    # and also their 'enabled/disabled' status
+    enabledStreamsOIDList = parsedSNMPBulkGet(snmp_session, oid_streamsStreamEnabled)
+    # enabledStreamsOIDList is a list of SNMPVariable objects containing the parameters
+    # SNMPVariable.value the enabled/disabled status (1 or 0) (represented as a string)
+    # SNMPVariable.oid, the oid for that particular stream
+    # SNMPVariable.snmp_type, The data type contained within SNMPVariable.value (eg INTEGER)
+    pprint.pprint(enabledStreamsOIDList)
+
+    ########### Get stream names from Broadcom #################
+    # Do bulk_get to grab all stream names with a single swipe
+    streamNames = parsedSNMPBulkGet(snmp_session, oid_streamsStreamName)
+    pprint.pprint(streamNames)
+    # # Declare array to hold the status of a stream (either enabled (1) or disabled (0))
+    # enabledStreamIDList = []
+    # try:
+    #     for item in enabledStreamsOIDList:
+    #         enabledStreamIDList.append(int(item.value, 10))
+    # except Exception as e:
+    #     raise Exception(f"Create enabledStreamIDList {e}")
+
     return enabledStreamsOIDList
 
 def main(argv):
@@ -94,7 +113,7 @@ def main(argv):
             # Create Config object for the supplied device
             targetDevice = Config(argv[0], argv[1]) # Pass in ip address and community string
             broadcomOIDs = getBroadcomOIDs(targetDevice)
-            pprint.pprint(broadcomOIDs)
+
         except Exception as e:
             print(f"Fatal error {e}")
             exit()
