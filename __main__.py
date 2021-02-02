@@ -73,7 +73,7 @@ def getBroadcomOIDs(config):
     streamsDestinationIPAddressOID = '.1.3.6.1.4.1.22425.10.5.3.5.1.12'
 
     # Create an SNMP session to be used for our requests to the broadcom
-    self.snmp_session = Session(
+    snmp_session = Session(
         hostname=config.hostName,
         community=config.community,
         version=config.version,
@@ -96,6 +96,7 @@ def main(argv):
             print(f"{broadcomOIDs}")
         except Exception as e:
             print(f"Fatal error {e}")
+            exit()
 
     else:
         print("usage: python __main.__.py [ip address of host] [snmp community string]")
