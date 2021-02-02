@@ -6,6 +6,8 @@
 #       Last Updated: 02/02/2021 but based on code written 19/07/2019
 #       Notes: These OIDs are tested on FW SR1.5.2
 import sys
+from easysnmp import Session
+import re   #Used for pattern matching of OIDs
 
 # An object to hold the device connection parameters
 class Config(object):
@@ -45,7 +47,7 @@ def parsedSNMPBulkGet(snmp_session, oid):
             # Return the oid tree object
         return prunedBulkResponse
     except Exception as e:
-        raise Exception(f"parsedSNMPBulkGet(),  {e}")
+        raise Exception(f"parsedSNMPBulkGet(), {e}")
 
 
 # Polls the supplied device and returns a dictionary of OIDS
