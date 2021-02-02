@@ -157,7 +157,7 @@ def main(argv):
             # Create Config object for the supplied device
             targetDevice = Config(argv[0], argv[1]) # Pass in ip address and community string
             # Get a list of active tx and rx streams
-            txStreams, rxStreams = getBroadcomOIDs(targetDevice)
+            txStreams, rxStreams = getBroadcomStreams(targetDevice)
             # Generate a dict of 'Dropped packet count' oids for the streams
             oids = generateOIDs(rxStreams, "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22.0")
             pprint.pprint(oids)
