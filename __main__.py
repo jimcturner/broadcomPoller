@@ -115,7 +115,7 @@ def getBroadcomOIDs(config):
                             "streamName": streamName,
                             "streamDestAddr": streamDestAddr
         })
-        pprint.pprint(streamsDetails)
+    pprint.pprint(streamsDetails)
     # # Declare array to hold the status of a stream (either enabled (1) or disabled (0))
     # enabledStreamIDList = []
     # try:
@@ -124,7 +124,7 @@ def getBroadcomOIDs(config):
     # except Exception as e:
     #     raise Exception(f"Create enabledStreamIDList {e}")
 
-    return enabledStreamsOIDList
+    return streamsDetails
 
 def main(argv):
     if len(argv) == 2:
