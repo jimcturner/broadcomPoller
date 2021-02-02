@@ -161,7 +161,7 @@ def main(argv):
             'PacketsReceived': '.1.3.6.1.4.1.22425.10.5.3.5.1.16'
         }
         print(f'\nusage: python broadcomSnmpOidGenerator [ip address of host] [snmp community string] [name of snmp parameter] [oid prefix]\n'
-              f'eg. broadcomSnmpOidGenerator "61.247.179.243" "ib3oot3am" "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22"\n\n'
+              f'eg. broadcomSnmpOidGenerator "61.247.179.243" "abcdef" "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22"\n\n'
               f'Some current known oid prefixes (for PIPA C211 SR 1.5.2 Firmware are:\n')
         pprint.pprint(sample_OID_LABELS)
         print("\n(Remember, these oids have to be suffixed with a .n where n is the stream no. "
