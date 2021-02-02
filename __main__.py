@@ -152,21 +152,23 @@ def generateOIDs(streamsList, oidVariableName,oidPrefix):
 
 
 def main(argv):
-    if len(argv) == 2:
+    if len(argv) == 4:
         try:
             # Create Config object for the supplied device
             targetDevice = Config(argv[0], argv[1]) # Pass in ip address and community string
             # Get a list of active tx and rx streams
             txStreams, rxStreams = getBroadcomStreams(targetDevice)
             # Generate a dict of 'Dropped packet count' oids for the streams
-            oids = generateOIDs(rxStreams, "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22.0")
+            # oids = generateOIDs(rxStreams, "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22.0")
+            oids = generateOIDs(rxStreams, arg[2], arg[3])
             pprint.pprint(oids)
         except Exception as e:
             print(f"Fatal error {e}")
             exit()
 
     else:
-        print("usage: python __main.__.py [ip address of host] [snmp community string]")
+        print(f"usage: python __main.__.py [ip address of host] [snmp community string] [name of snmp parameter] [oid prefix]\n"
+              f"eg. ")
 
 
 # Invoke main() method (entry point for Python script)
