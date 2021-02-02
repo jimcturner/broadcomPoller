@@ -8,6 +8,7 @@
 import sys
 from easysnmp import Session
 import re   #Used for pattern matching of OIDs
+import pprint # pretty printing of variables
 
 # An object to hold the device connection parameters
 class Config(object):
@@ -93,7 +94,7 @@ def main(argv):
             # Create Config object for the supplied device
             targetDevice = Config(argv[0], argv[1]) # Pass in ip address and community string
             broadcomOIDs = getBroadcomOIDs(targetDevice)
-            print(f"{broadcomOIDs}")
+            pprint.pprint(broadcomOIDs)
         except Exception as e:
             print(f"Fatal error {e}")
             exit()
