@@ -97,6 +97,11 @@ def getBroadcomOIDs(config):
     # Do bulk_get to grab all stream names with a single swipe
     streamNames = parsedSNMPBulkGet(snmp_session, oid_streamsStreamName)
     pprint.pprint(streamNames)
+
+    ##### Get Stream destination ip addresses (of all streams, tx or rx (impossible), enabled or not) #################
+    streamDestIPAddr = parsedSNMPBulkGet(snmp_session, oid_streamsDestinationIPAddress)
+    pprint.pprint(streamDestIPAddr)
+
     # # Declare array to hold the status of a stream (either enabled (1) or disabled (0))
     # enabledStreamIDList = []
     # try:
