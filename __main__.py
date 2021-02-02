@@ -111,7 +111,7 @@ def getBroadcomOIDs(config):
         enabledStatus = streamsStatuses[s].value
         streamName = streamsNames[s].value
         streamDestAddr = streamsDestIPAddr[s].value
-        streamsList.append({"enabled": enabledStatus,
+        streamsDetails.append({"enabled": enabledStatus,
                             "streamName": streamName,
                             "streamDestAddr": streamDestAddr
         })
