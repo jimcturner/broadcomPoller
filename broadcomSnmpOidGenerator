@@ -160,12 +160,12 @@ def main(argv):
             'LossOfConnectionCount': '.1.3.6.1.4.1.22425.10.5.3.5.1.23',  # (buffer underrun/hole in the audio)
             'PacketsReceived': '.1.3.6.1.4.1.22425.10.5.3.5.1.16'
         }
-        print(f'usage: python __main.__.py [ip address of host] [snmp community string] [name of snmp parameter] [oid prefix]\n'
+        print(f'\nusage: python broadcomSnmpOidGenerator [ip address of host] [snmp community string] [name of snmp parameter] [oid prefix]\n'
               f'eg. broadcomSnmpOidGenerator "61.247.179.243" "ib3oot3am" "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22"\n\n'
               f'Some current known oid prefixes (for PIPA C211 SR 1.5.2 Firmware are:\n')
         pprint.pprint(sample_OID_LABELS)
-        print("(Remember, these oids have to be suffixed with a .n where n is the stream no., and that is"
-              "what this little program is attempting to establish via an initiall snmp_get to establish"
+        print("\n(Remember, these oids have to be suffixed with a .n where n is the stream no. "
+              "That is what this little program is attempting to establish via an initial snmp_get to establish"
               "what the currently active streams are, on this particular device)")
 
 
