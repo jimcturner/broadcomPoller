@@ -160,7 +160,7 @@ def main(argv):
             txStreams, rxStreams = getBroadcomStreams(targetDevice)
             # Generate a dict of 'Dropped packet count' oids for the streams
             # oids = generateOIDs(rxStreams, "DroppedPacketCount", ".1.3.6.1.4.1.22425.10.5.3.5.1.22.0")
-            oids = generateOIDs(rxStreams, arg[2], arg[3])
+            oids = generateOIDs(rxStreams, argv[2], argv[3])
             pprint.pprint(oids)
         except Exception as e:
             print(f"Fatal error {e}")
