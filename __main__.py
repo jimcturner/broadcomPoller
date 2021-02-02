@@ -108,21 +108,21 @@ def getBroadcomOIDs(config):
     streamsDetails = []
     for s in range(streamsCount):
         # Get enabled/disabled status
-        enabledStatus = streamsStatuses[s].value
+        enabledStatus = int(streamsStatuses[s].value)
         streamName = streamsNames[s].value
         streamDestAddr = streamsDestIPAddr[s].value
+        # Determine whether this is a tx or rx stream by testing streamDestAddr. If empty or 0.0.0.0, this is a tx stream
+        if str(streamDestAddr) == "" or str(streamDestAddr) == "0.0.0.0":
+            direction = "tx"
+        else:
+            direction = "rx"
         streamsDetails.append({"enabled": enabledStatus,
                             "streamName": streamName,
-                            "streamDestAddr": streamDestAddr
+                            "streamDestAddr": streamDestAddr,
+                            "direction": direction
         })
     pprint.pprint(streamsDetails)
-    # # Declare array to hold the status of a stream (either enabled (1) or disabled (0))
-    # enabledStreamIDList = []
-    # try:
-    #     for item in enabledStreamsOIDList:
-    #         enabledStreamIDList.append(int(item.value, 10))
-    # except Exception as e:
-    #     raise Exception(f"Create enabledStreamIDList {e}")
+
 
     return streamsDetails
 
