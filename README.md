@@ -12,9 +12,9 @@ usage:
 
 might yield the following 
 
-{'Dhaka-W1-comb-Rx_DroppedPacketCount,': '.1.3.6.1.4.1.22425.10.5.3.5.1.22.2',
- 'Dhaka-W1-eth0-Rx_DroppedPacketCount,': '.1.3.6.1.4.1.22425.10.5.3.5.1.22.0',
- 'Dhaka-W1-eth1-Rx_DroppedPacketCount,': '.1.3.6.1.4.1.22425.10.5.3.5.1.22.1'}
+	{'Dhaka-W1-comb-Rx_DroppedPacketCount,': '.1.3.6.1.4.1.22425.10.5.3.5.1.22.2',
+ 	'Dhaka-W1-eth0-Rx_DroppedPacketCount,': '.1.3.6.1.4.1.22425.10.5.3.5.1.22.0',
+ 	'Dhaka-W1-eth1-Rx_DroppedPacketCount,': '.1.3.6.1.4.1.22425.10.5.3.5.1.22.1'}
 
 To get the dropped packet count for stream Dhaka-W1-eth1-Rx, you could then run:
 
