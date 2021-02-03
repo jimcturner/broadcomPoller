@@ -32,4 +32,9 @@ Some other current known oid prefixes (for PIPA C211 SR 1.5.2 Firmware are:
 	'PacketsReceived': '.1.3.6.1.4.1.22425.10.5.3.5.1.16'
         
 Remember, these oids have to be suffixed with a .n where n is the stream no. to make them 'complete' - that's the purpose of broadcomPoller"
+
+Prerequisites:
+	Python3
+	sudo apt-get install libsnmp-dev snmp-mibs-downloader
+	easysnmp (if this isn't installed, add it using pip3 install easysnmp)
               
